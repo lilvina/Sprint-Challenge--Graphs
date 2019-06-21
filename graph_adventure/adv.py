@@ -22,6 +22,9 @@ player = Player("Name", world.startingRoom)
 
 # FILL THIS IN
 traversalPath = ['n', 's']
+adventure = {
+    0: {'n': '?', 's': '?', 'w': '?', 'e': '?'}
+}
 
 
 # TRAVERSAL TEST
@@ -37,6 +40,55 @@ if len(visited_rooms) == len(roomGraph):
 else:
     print("TESTS FAILED: INCOMPLETE TRAVERSAL")
     print(f"{len(roomGraph) - len(visited_rooms)} unvisited rooms")
+
+# make a Queue class
+class Queue:
+    def __init__(self):
+        self.storage = []
+
+    def enqueue(self, value):
+        self.queue.append(value)
+
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+
+    def size(self):
+        return len(self.queue)
+
+# do a BFS
+def bfs_adventure():
+    q = Queue
+    visited = set()
+    q.enqueue([player.currentRoom])
+    while q.size() > 0:
+        path = q.dequeue()
+        print(path)
+        v = path[-1]
+        if v is not visited:
+            visited.add(v)
+            for neighbor in graph[v]:
+                if graph[v][neighbor] == '?':
+                    return path
+                else:
+                    copy_path = list(path)
+                    copy_path.append(graph[v][neighbor])
+                    q.enqueue(copy_path)
+    return visited
+
+def directions_to_rooms(rooms):
+    room_current = rooms[0]
+    room_directions = []
+
+    for room in rooms[1:]:
+        for stop in graph[room_current]:
+            if graph[room_current][stop] == room:
+                room_directions.append(stop)
+                room_current = room
+                break
+    return room_directions
 
 
 
