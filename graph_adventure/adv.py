@@ -21,7 +21,8 @@ player = Player("Name", world.startingRoom)
 
 
 # FILL THIS IN
-traversalPath = ['n', 's']
+traversalPath = ['n', 's', 'e', 'w']
+adventure = {}
 
 
 # TRAVERSAL TEST
@@ -37,6 +38,56 @@ if len(visited_rooms) == len(roomGraph):
 else:
     print("TESTS FAILED: INCOMPLETE TRAVERSAL")
     print(f"{len(roomGraph) - len(visited_rooms)} unvisited rooms")
+
+# make a Queue class
+class Stack:
+    def __init__(self):
+        self.stack = []
+
+    def push(self, value):
+        self.stack.append(value)
+
+    def pop(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+
+    def size(self):
+        return len(self.stack)
+
+stack = Stack()
+
+while len(traversalPath) and len(adventure) < 2000:
+    current_room = player.currentRoom.id
+    # exits current room
+    if current_room not in adventure:
+        current_exit = {}
+
+        for exit in player.currentRoom.getExits():
+            current_exit[exit] = "?"
+        adventure[current_room] = current_exit
+    current_exit = adventure[current_room]
+
+    if "n" in current_exit and current_exit["n"] == "?":
+        player.travel("n")
+        traversalPath.append("n")
+        next_room = player.currentRoom.id
+        current_exit["n"] = next_room
+
+        if next_room not in adventure:
+            exit_room = {}
+
+            for exits in player.currentRoom.getExits():
+                exit_room[exits] = "?"
+
+            exit_room["s"] = current_room
+            adventure[next_room] = exit_room
+        else:
+            adventure[next_room]["s"] = current_room
+        stack.push("s")
+
+
 
 
 
